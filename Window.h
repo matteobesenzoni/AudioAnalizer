@@ -6,13 +6,13 @@
 class Window : public DocumentWindow
 {
 public:
-	Window() : DocumentWindow(ProjectInfo::projectName,
+	Window(DoubleBuffer *double_buffer) : DocumentWindow(ProjectInfo::projectName,
 		LookAndFeel::getDefaultLookAndFeel()
 			.findColour(ResizableWindow::backgroundColourId),
 		DocumentWindow::allButtons)
 	{
 		setUsingNativeTitleBar(true);
-		spectrogram = new Spectrogram();
+		spectrogram = new Spectrogram(double_buffer);
 		setContentOwned(spectrogram.get(), true);
 		setResizable(true, true);
 		centreWithSize(getWidth(), getHeight());

@@ -1,7 +1,8 @@
 
 #include "BitonalAnalizer.h"
 
-BitonalAnalizer::BitonalAnalizer(float freq1, float freq1_t, float freq2, float freq2_t, float sample_rate, int fft_window, int hz) :
+BitonalAnalizer::BitonalAnalizer(DoubleBuffer *double_buffer, float freq1, float freq1_t, float freq2, float freq2_t, float sample_rate, int fft_window, int hz) :
+	double_buffer(double_buffer),
 	freq1(freq1), freq1_t(freq1_t),
 	freq2(freq2), freq2_t(freq2_t),
 	sample_rate(sample_rate), fft_window(fft_window), hz(hz),
@@ -28,7 +29,7 @@ void BitonalAnalizer::start()
 
 void BitonalAnalizer::timerCallback() 
 {
-	double_buffer.read(fft_data);
+	double_buffer->read(fft_data);
 	updateQueue();
 	analize();
 	alert();

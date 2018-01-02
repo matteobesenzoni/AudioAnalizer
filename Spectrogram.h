@@ -5,14 +5,12 @@
 
 #include <mutex>
 
-extern DoubleBuffer double_buffer;
-
 using namespace std;
 
 class Spectrogram : public Component, private Timer
 {
 public:
-	Spectrogram();
+	Spectrogram(DoubleBuffer *double_buffer);
 	~Spectrogram();
 
 	void start();
@@ -27,6 +25,8 @@ private:
 
 	float fft_data[FFT_SIZE * 2];
 	Image spectrogram_image;
+
+	DoubleBuffer *double_buffer;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Spectrogram)
 };

@@ -6,14 +6,12 @@
 #include <queue>
 #include <algorithm>
 
-extern DoubleBuffer double_buffer;
-
 using namespace std;
 
 class BitonalAnalizer : private Timer
 {
 public:
-	BitonalAnalizer(float freq1, float freq1_t, float freq2, float freq2_t, float sample_rate, int ftt_window, int hz = 20);
+	BitonalAnalizer(DoubleBuffer *double_buffer, float freq1, float freq1_t, float freq2, float freq2_t, float sample_rate, int ftt_window, int hz = 20);
 	~BitonalAnalizer();
 
 	void start();
@@ -48,4 +46,6 @@ private:
 	const size_t buffer_size;
 
 	bool match;
+
+	DoubleBuffer *double_buffer;
 };

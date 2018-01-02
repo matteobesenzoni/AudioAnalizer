@@ -1,7 +1,8 @@
 
 #include "Spectrogram.h"
 
-Spectrogram::Spectrogram() :
+Spectrogram::Spectrogram(DoubleBuffer *double_buffer) :
+	double_buffer(double_buffer),
 	spectrogram_image(Image::RGB, 512, 512, true)
 {
 	setOpaque(false);
@@ -30,7 +31,7 @@ void Spectrogram::resized()
 
 void Spectrogram::timerCallback()
 {
-	double_buffer.read(fft_data);
+	double_buffer->read(fft_data);
 	drawNextFrame();
 	repaint();
 }

@@ -13,8 +13,6 @@
 
 using namespace std;
 
-DoubleBuffer double_buffer;
-
 class AudioRecognizer : public JUCEApplication
 {
 public:
@@ -26,12 +24,14 @@ public:
 
 	void initialise(const String& cmd) override
 	{
+		DoubleBuffer *double_buffer = new DoubleBuffer();
+
 		bool spectrogram = cmd.contains("-sp");
 
-		police = new BitonalAnalizer(1258.0f, 0.75f, 1880.0f, 0.75f, SAMPLE_RATE, FFT_SIZE);
-		audio_processing = new AudioProcessing(BUFFER_SIZE(6), SAMPLE_RATE);
+		police = new BitonalAnalizer(double_buffer, 1258.0f, 0.75f, 1880.0f, 0.75f, SAMPLE_RATE, FFT_SIZE);
+		audio_processing = new AudioProcessing(double_buffer, BUFFER_SIZE(6), SAMPLE_RATE);
 		if(spectrogram)
-			window = new Window();
+			window = new Window(double_buffer);
 
 		police.get()->start();
 

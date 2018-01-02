@@ -3,7 +3,8 @@
 
 #include <list>
 
-AudioProcessing::AudioProcessing(int new_buffer_size, double new_sample_rate) : 
+AudioProcessing::AudioProcessing(DoubleBuffer *double_buffer, int new_buffer_size, double new_sample_rate) : 
+	double_buffer(double_buffer),
 	forward_FFT((int)log2(FFT_SIZE)),
 	fifo_index(0)
 {
@@ -51,7 +52,7 @@ void AudioProcessing::getNextAudioBlock(const AudioSourceChannelInfo& buffer)
 				forward_FFT.performFrequencyOnlyForwardTransform(fft_data);
 
 				// update double buffer
-				double_buffer.write(fft_data);
+				double_buffer->write(fft_data);
 
 				// reset fifo index
 				fifo_index = 0;

@@ -5,14 +5,12 @@
 
 #include <mutex>
 
-extern DoubleBuffer double_buffer;
-
 using namespace std;
 
 class AudioProcessing : public AudioAppComponent
 {
 public:
-	AudioProcessing(int new_buffer_size = 0, double new_sample_rate = 0);
+	AudioProcessing(DoubleBuffer *double_buffer, int new_buffer_size = 0, double new_sample_rate = 0);
 	~AudioProcessing();
 
 	void prepareToPlay(int, double) override;
@@ -28,6 +26,8 @@ private:
 	dsp::FFT forward_FFT;
 
 	AudioDeviceManager::AudioDeviceSetup custom_device_setup;
+
+	DoubleBuffer *double_buffer;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessing)
 };
