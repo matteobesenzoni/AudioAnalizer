@@ -25,8 +25,8 @@ private:
 
 	void drawNextFrame();
 
-	float fftData[FFT_SIZE * 2];
-	Image spectrogramImage;
+	float fft_data[FFT_SIZE * 2];
+	Image spectrogram_image;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Spectrogram)
 };

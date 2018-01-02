@@ -12,7 +12,7 @@ using namespace std;
 class AudioProcessing : public AudioAppComponent
 {
 public:
-	AudioProcessing(int newBufferSize = 0, double newSampleRate = 0);
+	AudioProcessing(int new_buffer_size = 0, double new_sample_rate = 0);
 	~AudioProcessing();
 
 	void prepareToPlay(int, double) override;
@@ -20,14 +20,14 @@ public:
 	void getNextAudioBlock(const AudioSourceChannelInfo&) override;
 
 private:
-	float fftData[FFT_SIZE * 2];
+	float fft_data[FFT_SIZE * 2];
 
 	float fifo[FFT_SIZE];
-	int fifoIndex;
+	int fifo_index;
 
-	dsp::FFT forwardFFT;
+	dsp::FFT forward_FFT;
 
-	AudioDeviceManager::AudioDeviceSetup customDeviceSetup;
+	AudioDeviceManager::AudioDeviceSetup custom_device_setup;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessing)
 };

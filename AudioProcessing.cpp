@@ -3,24 +3,24 @@
 
 #include <list>
 
-AudioProcessing::AudioProcessing(int newBufferSize, double newSampleRate) : 
-	forwardFFT((int)log2(FFT_SIZE)),
-	fifoIndex(0)
+AudioProcessing::AudioProcessing(int new_buffer_size, double new_sample_rate) : 
+	forward_FFT((int)log2(FFT_SIZE)),
+	fifo_index(0)
 {
 	setAudioChannels(2, 0);  // 2 in, 0 out
 
-	deviceManager.getAudioDeviceSetup(customDeviceSetup); // current setup
+	deviceManager.getAudioDeviceSetup(custom_device_setup); // current setup
 
-	customDeviceSetup.bufferSize = newBufferSize;
-	customDeviceSetup.sampleRate = newSampleRate;
-	String error = deviceManager.setAudioDeviceSetup(customDeviceSetup, true);
+	custom_device_setup.bufferSize = new_buffer_size;
+	custom_device_setup.sampleRate = new_sample_rate;
+	String error = deviceManager.setAudioDeviceSetup(custom_device_setup, true);
 
 	if (!error.isEmpty())
 		cout << error << endl;
 
 	cout << endl 
-		 << " - Buffer Size "	<< customDeviceSetup.bufferSize << endl
-		 << " - Sample Rate "	<< customDeviceSetup.sampleRate << endl
+		 << " - Buffer Size "	<< custom_device_setup.bufferSize << endl
+		 << " - Sample Rate "	<< custom_device_setup.sampleRate << endl
 		 << " - FFT Window  "	<< FFT_SIZE						<< endl;
 }
 
@@ -33,31 +33,31 @@ void AudioProcessing::prepareToPlay(int, double) {}
 
 void AudioProcessing::releaseResources() {}
 
-void AudioProcessing::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
+void AudioProcessing::getNextAudioBlock(const AudioSourceChannelInfo& buffer)
 {
-	if (bufferToFill.buffer->getNumChannels() > 0)
+	if (buffer.buffer->getNumChannels() > 0)
 	{
-		const float* input = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+		const float* input = buffer.buffer->getWritePointer(0, buffer.startSample);
 
-		for (int i = 0; i < bufferToFill.numSamples; ++i)
+		for (int i = 0; i < buffer.numSamples; ++i)
 		{
-			if (fifoIndex == FFT_SIZE)
+			if (fifo_index == FFT_SIZE)
 			{
 				// clear old data and copy new buffer
-				zeromem(fftData, sizeof(fftData));
-				memcpy(fftData, fifo, sizeof(fifo));
+				zeromem(fft_data, sizeof(fft_data));
+				memcpy(fft_data, fifo, sizeof(fifo));
 
 				// do FFT
-				forwardFFT.performFrequencyOnlyForwardTransform(fftData);
+				forward_FFT.performFrequencyOnlyForwardTransform(fft_data);
 
 				// update double buffer
-				double_buffer.write(fftData);
+				double_buffer.write(fft_data);
 
 				// reset fifo index
-				fifoIndex = 0;
+				fifo_index = 0;
 			}
 			// add sample
-			fifo[fifoIndex++] = input[i];
+			fifo[fifo_index++] = input[i];
 		}
 	}
 }

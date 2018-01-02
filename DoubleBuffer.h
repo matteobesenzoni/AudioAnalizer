@@ -8,45 +8,46 @@ class DoubleBuffer
 {
 public:
 	DoubleBuffer() :
-		f1(new float[FFT_SIZE * 2]),
-		f2(new float[FFT_SIZE * 2]),
-		r(f1),
-		w(f2)
+		buffer1(new float[FFT_SIZE * 2]),
+		buffer2(new float[FFT_SIZE * 2]),
+		read_p(buffer1),
+		write_p(buffer2)
 	{
-		zeromem(f1, FFT_SIZE * 2 * sizeof(float));
-		zeromem(f2, FFT_SIZE * 2 * sizeof(float));
+		zeromem(buffer1, buffer_size);
+		zeromem(buffer2, buffer_size);
 	}
 
 	~DoubleBuffer()
 	{
-		r = nullptr;
-		w = nullptr;
-		delete[] f1;
-		delete[] f2;
+		read_p = nullptr;
+		write_p = nullptr;
+		delete[] buffer1;
+		delete[] buffer2;
 	}
 
-	void write(float *bufferToRead)
+	void write(float *data)
 	{	
-		memcpy(w, bufferToRead, FFT_SIZE * 2 * sizeof(float));
+		memcpy(write_p, data, buffer_size);
 
-		if (lock.try_lock())
+		if (mtx.try_lock())
 		{
-			swap(r, w);
-			lock.unlock();
+			swap(read_p, write_p);
+			mtx.unlock();
 		}
 	}
 
-	void read(float *bufferToFill)
+	void read(float *buffer)
 	{
-		if (lock.try_lock())
+		if (mtx.try_lock())
 		{
-			memcpy(bufferToFill, r, FFT_SIZE * 2 * sizeof(float));
-			lock.unlock();
+			memcpy(buffer, read_p, buffer_size);
+			mtx.unlock();
 		}
 	}
 
 private:
-	float *f1, *f2, *r, *w;
+	const size_t buffer_size = FFT_SIZE * 2 * sizeof(float);
 
-	mutex lock;
+	float *buffer1, *buffer2, *read_p, *write_p;
+	mutex mtx;
 };

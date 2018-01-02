@@ -29,7 +29,7 @@ public:
 		bool spectrogram = cmd.contains("-sp");
 
 		police = new BitonalAnalizer(1258.0f, 0.75f, 1880.0f, 0.75f, SAMPLE_RATE, FFT_SIZE);
-		audioProcessing = new AudioProcessing(BUFFER_SIZE(6), SAMPLE_RATE);
+		audio_processing = new AudioProcessing(BUFFER_SIZE(6), SAMPLE_RATE);
 		if(spectrogram)
 			window = new Window();
 
@@ -43,7 +43,7 @@ public:
 	{
 		police = nullptr;
 		window = nullptr;
-		audioProcessing = nullptr;
+		audio_processing = nullptr;
 	}
 
 	void systemRequestedQuit() override
@@ -52,7 +52,7 @@ public:
 	}
 
 private:
-	ScopedPointer<AudioProcessing> audioProcessing;
+	ScopedPointer<AudioProcessing> audio_processing;
 	ScopedPointer<Window> window;
 
 	ScopedPointer<BitonalAnalizer> police/*, ambulance, firefighters*/;
