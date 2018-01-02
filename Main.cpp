@@ -1,5 +1,5 @@
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 #include "Window.h"
 #include "AudioProcessing.h"
 #include "DoubleBuffer.h"
