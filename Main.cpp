@@ -24,7 +24,7 @@ public:
 
 	void initialise(const String& cmd) override
 	{
-		DoubleBuffer *double_buffer = new DoubleBuffer();
+		double_buffer = new DoubleBuffer();
 
 		bool spectrogram = cmd.contains("-sp");
 
@@ -41,6 +41,7 @@ public:
 
 	void shutdown() override
 	{
+		double_buffer = nullptr;
 		police = nullptr;
 		window = nullptr;
 		audio_processing = nullptr;
@@ -52,6 +53,8 @@ public:
 	}
 
 private:
+	ScopedPointer<DoubleBuffer> double_buffer;
+
 	ScopedPointer<AudioProcessing> audio_processing;
 	ScopedPointer<Window> window;
 

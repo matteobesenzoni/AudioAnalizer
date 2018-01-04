@@ -31,8 +31,8 @@ void BitonalAnalizer::timerCallback()
 {
 	double_buffer->read(fft_data);
 	updateQueue();
-	analize();
-	alert();
+	analize(1.0f, 0.8f);
+	//alert();
 }
 
 void BitonalAnalizer::updateQueue()
@@ -42,13 +42,10 @@ void BitonalAnalizer::updateQueue()
 	buffer_current_size = min(++buffer_current_size, buffer_size);
 }
 
-void BitonalAnalizer::analize()
+float BitonalAnalizer::analize(const float db_threshold, const float freq_threshold)
 {
-	const float db_threshold = 1.0f;
-	const float freq1_threshold = 0.8f;
-	const float freq2_threshold = 0.8f;
-	const float freq1_min_score = freq1_t * hz * freq1_threshold;
-	const float freq2_min_score = freq2_t * hz * freq2_threshold;
+	const float freq1_min_score = freq1_t * hz * freq_threshold;
+	const float freq2_min_score = freq2_t * hz * freq_threshold;
 
 	float freq1_score = 0.0f;
 	float freq2_score = 0.0f;
@@ -81,7 +78,28 @@ void BitonalAnalizer::analize()
 			freq2_prev = false;
 
 		match = freq1_score >= freq1_min_score || freq2_score >= freq2_min_score;
+		return max(freq1_score, freq2_score);
 	}
+}
+
+float BitonalAnalizer::analize1(const float db_threshold, const float freq_threshold)
+{
+	const float min_score = (freq1_t + freq2_t) * hz * freq_threshold;
+
+	string str = "";
+	for (int i = 0; i < buffer_current_size; i++)
+	{
+		pair p = buffer[i];
+		int s = 0;
+		if (p.freq1 >= db_threshold) s++;
+		if (p.freq2 >= db_threshold) s++;
+		str += '0' + s;
+	}
+
+	float score = count(str.begin(), str.end(), '1') / (float)buffer_size; // buffer fills up quickly, no need to use current size
+
+	match = score >= min_score;
+	return score;
 }
 
 void BitonalAnalizer::alert()

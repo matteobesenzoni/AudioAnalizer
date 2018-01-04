@@ -20,7 +20,8 @@ private:
 	void timerCallback() override;
 
 	void updateQueue();
-	void analize();
+	float analize(const float db_threshold, const float freq_threshold);
+	float analize1(const float db_threshold, const float freq_threshold);
 	void alert();
 	int bin(float);
 
