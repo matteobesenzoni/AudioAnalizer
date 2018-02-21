@@ -6,10 +6,11 @@
 class Window : public DocumentWindow
 {
 public:
-	Window(DoubleBuffer *double_buffer) : DocumentWindow(ProjectInfo::projectName,
-		LookAndFeel::getDefaultLookAndFeel()
-			.findColour(ResizableWindow::backgroundColourId),
-		DocumentWindow::allButtons)
+	Window(DoubleBuffer *double_buffer) : 
+		DocumentWindow(ProjectInfo::projectName,
+			LookAndFeel::getDefaultLookAndFeel()
+				.findColour(ResizableWindow::backgroundColourId),
+			DocumentWindow::allButtons)
 	{
 		setUsingNativeTitleBar(true);
 		spectrogram = new Spectrogram(double_buffer);

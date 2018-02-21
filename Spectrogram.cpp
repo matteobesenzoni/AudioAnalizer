@@ -24,10 +24,7 @@ void Spectrogram::paint(Graphics& g)
 	g.drawImage(spectrogram_image, getLocalBounds().toFloat());
 }
 
-void Spectrogram::resized()
-{
-
-}
+void Spectrogram::resized() {}
 
 void Spectrogram::timerCallback()
 {
@@ -51,7 +48,7 @@ void Spectrogram::drawNextFrame()
 	for (int y = 1; y < image_h; ++y)
 	{
 		const float skewed_y = 1.0f - exp(log(y / (float)image_h) * 0.2f); // log scale represetation | 1.0 - e^[ ln(y / imageHeight) * 0.2 ]
-		const int fft_data_index = jlimit(0, FFT_SIZE / 2, (int)(skewed_y * FFT_SIZE / 2)); // limit fftData index to half it's size (second half not used for spectrogram)
+		const int fft_data_index = jlimit(0, FFT_SIZE / 2, (int)(skewed_y * FFT_SIZE / 2)); // limit fftData index to half its size (second half not used for spectrogram)
 		const float level = jmap(fft_data[fft_data_index], 0.0f, jmax(max_level.getEnd(), 1e-5f), 0.0f, 1.0f); // map intensity to [0,1] scale based on highest value
 
 		Colour colour = Colour::fromHSV(level, 1.0f, level, 1.0f);

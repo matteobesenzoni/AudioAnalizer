@@ -31,8 +31,8 @@ void BitonalAnalizer::timerCallback()
 {
 	double_buffer->read(fft_data);
 	updateQueue();
-	analize(1.0f, 0.8f);
-	//alert();
+	analize(1.0f, 0.5f);
+	alert();
 }
 
 void BitonalAnalizer::updateQueue()
@@ -42,7 +42,7 @@ void BitonalAnalizer::updateQueue()
 	buffer_current_size = min(++buffer_current_size, buffer_size);
 }
 
-float BitonalAnalizer::analize(const float db_threshold, const float freq_threshold)
+float BitonalAnalizer::analize1(const float db_threshold, const float freq_threshold)
 {
 	const float freq1_min_score = freq1_t * hz * freq_threshold;
 	const float freq2_min_score = freq2_t * hz * freq_threshold;
@@ -80,11 +80,12 @@ float BitonalAnalizer::analize(const float db_threshold, const float freq_thresh
 		match = freq1_score >= freq1_min_score || freq2_score >= freq2_min_score;
 		return max(freq1_score, freq2_score);
 	}
+	return 0.0f;
 }
 
-float BitonalAnalizer::analize1(const float db_threshold, const float freq_threshold)
+float BitonalAnalizer::analize(const float db_threshold, const float freq_threshold)
 {
-	const float min_score = (freq1_t + freq2_t) * hz * freq_threshold;
+	//const float min_score = (freq1_t + freq2_t) * hz * freq_threshold;
 
 	string str = "";
 	for (int i = 0; i < buffer_current_size; i++)
@@ -93,30 +94,28 @@ float BitonalAnalizer::analize1(const float db_threshold, const float freq_thres
 		int s = 0;
 		if (p.freq1 >= db_threshold) s++;
 		if (p.freq2 >= db_threshold) s++;
-		str += '0' + s;
+		str += '0' + (char)s;
 	}
 
 	float score = count(str.begin(), str.end(), '1') / (float)buffer_size; // buffer fills up quickly, no need to use current size
 
-	match = score >= min_score;
+	match = score >= freq_threshold;
 	return score;
 }
 
 void BitonalAnalizer::alert()
 {
 	if (match)
-	{
-		// MATCH!!!
-	}
+		cout << "MATCH!!!" << endl;
 }
 
 int BitonalAnalizer::bin(float f)
 {
-	if (freq1 <= frequency_resolution / 2.0f)
+	if (f <= frequency_resolution / 2.0f)
 		return 0;
-	else if (freq1 >= sample_rate - frequency_resolution / 2.0f)
+	else if (f >= sample_rate - frequency_resolution / 2.0f)
 		return fft_window - 1;
 	else
-		return (int) ((f / frequency_resolution) / 2.0f);
+		return (int) (f / frequency_resolution / 2.0f);
 }
 
