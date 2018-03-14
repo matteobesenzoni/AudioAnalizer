@@ -22,7 +22,7 @@ AudioProcessing::AudioProcessing(DoubleBuffer *double_buffer, int new_buffer_siz
 	cout << endl 
 		 << " - Buffer Size "	<< custom_device_setup.bufferSize << endl
 		 << " - Sample Rate "	<< custom_device_setup.sampleRate << endl
-		 << " - FFT Window  "	<< FFT_SIZE						<< endl;
+		 << " - FFT Window  "	<< FFT_SIZE								 << endl;
 }
 
 AudioProcessing::~AudioProcessing()

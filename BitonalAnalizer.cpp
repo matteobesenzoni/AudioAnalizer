@@ -85,8 +85,6 @@ float BitonalAnalizer::analize1(const float db_threshold, const float freq_thres
 
 float BitonalAnalizer::analize(const float db_threshold, const float freq_threshold)
 {
-	//const float min_score = (freq1_t + freq2_t) * hz * freq_threshold;
-
 	string str = "";
 	for (int i = 0; i < buffer_current_size; i++)
 	{
